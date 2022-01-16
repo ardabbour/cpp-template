@@ -33,9 +33,7 @@ jobs:
         cpack -G TGZ
     
     - name: Release
-      working-directory: ${{github.workspace}}/build
       uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
       with:
         files: |
             *.zip
