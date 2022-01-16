@@ -28,17 +28,19 @@ jobs:
         cd ${{env.PREREQ_PATH}}/googletest-release-1.11.0/build
         cmake .. -DCMAKE_BUILD_TYPE=Release && make install
         rm -rf ${{env.PREREQ_PATH}}
+        apt update && apt install libgtest-dev libgmock-dev googletest doxygen
       shell: bash
 
     - name: Configure
       run: |
         cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      run: |
+        cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
         echo "VERSION_MAJOR=$(grep CMAKE_PROJECT_VERSION_MAJOR CMakeCache.txt | cut -d "=" -f2)" >> $GITHUB_ENV
         echo "VERSION_MINOR=$(grep CMAKE_PROJECT_VERSION_MINOR CMakeCache.txt | cut -d "=" -f2)" >> $GITHUB_ENV
         echo "VERSION_PATCH=$(grep CMAKE_PROJECT_VERSION_PATCH CMakeCache.txt | cut -d "=" -f2)" >> $GITHUB_ENV
-
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Test
       working-directory: ${{github.workspace}}/build
