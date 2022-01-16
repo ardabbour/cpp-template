@@ -56,6 +56,6 @@ jobs:
       with:
         tag_name: ${{env.VERSION_MAJOR}}.${{env.VERSION_MINOR}}.${{env.VERSION_PATCH}}
         files: |
-            *.zip
-            *.tar.gz
-            *.deb
+            ${{github.workspace}}/build/*.zip
+            ${{github.workspace}}/build/*.tar.gz
+            ${{github.workspace}}/build/*.deb
