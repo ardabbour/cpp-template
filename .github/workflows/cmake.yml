@@ -18,12 +18,11 @@ jobs:
 
     - name: Prerequisites
       run: |
-        echo ${{github.workspace}}/prerequisites >> $PREQ_PATH
-        wget --quiet https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz -O ${{env.PREQ_PATH}}/googletest.tar.gz
-        tar -xvzf ${{env.PREQ_PATH}}/googletest.tar.gz
-        mv ${{env.PREQ_PATH}}/googletest-release-1.11.0 ${{env.PREQ_PATH}}/googletest
-        mkdir -p ${{env.PREQ_PATH}}/googletest/build && cd ${{env.PREQ_PATH}}/googletest/build && cmake .. -DCMAKE_BUILD_TYPE=Release && make install
-        rm -rf ${{env.PREQ_PATH}}
+        wget --quiet https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz -O ${{github.workspace}}/prerequisites/googletest.tar.gz
+        tar -xvzf ${{github.workspace}}/prerequisites/googletest.tar.gz
+        mv ${{github.workspace}}/prerequisites/googletest-release-1.11.0 ${{github.workspace}}/prerequisites/googletest
+        mkdir -p ${{github.workspace}}/prerequisites/googletest/build && cd ${{github.workspace}}/prerequisites/googletest/build && cmake .. -DCMAKE_BUILD_TYPE=Release && make install
+        rm -rf ${{github.workspace}}/prerequisites
 
     - name: Configure
       run: |
