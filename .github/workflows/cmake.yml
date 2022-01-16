@@ -8,6 +8,7 @@ on:
 
 env:
   BUILD_TYPE: Release
+  PREREQ_PATH: ${{github.workspace}}/prerequisites
 
 jobs:
   build:
@@ -15,14 +16,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
     - name: Prerequisites
       run: |
-        mkdir -p ${{github.workspace}}/prerequisites
-        wget --quiet https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
-        tar -xvzf ${{github.workspace}}/prerequisites/release-1.11.0.tar.gz
-        mkdir -p ${{github.workspace}}/prerequisites/googletest-release-1.11.0/build && cd ${{github.workspace}}/prerequisites/googletest-release-1.11.0/build && cmake .. -DCMAKE_BUILD_TYPE=Release && make install
-        rm -rf ${{github.workspace}}/prerequisites
+        mkdir -p ${{env.PREREQ_PATH}}
+        wget --quiet https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz -O ${{env.PREREQ_PATH}}/googletest.tar.gz
+        tar -xvzf ${{env.PREREQ_PATH}}/googletest.tar.gz
+        mv ${{env.PREREQ_PATH}}/googletest-release-1.11.0 ${{env.PREREQ_PATH}}/googletest
+        mkdir -p ${{env.PREREQ_PATH}}/googletest/build
+        cd ${{env.PREREQ_PATH}}/googletest/build
+        cmake .. -DCMAKE_BUILD_TYPE=Release && make install
+        rm -rf ${{env.PREREQ_PATH}}
       shell: bash
 
     - name: Configure
