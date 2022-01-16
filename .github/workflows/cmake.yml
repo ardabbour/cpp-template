@@ -16,6 +16,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Prerequisites
+      run: |
+        echo ${{github.workspace}}/prerequisites >> $PREQ_PATH
+        wget --quiet https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz -O ${{env.PREQ_PATH}}/googletest.tar.gz
+        tar -xvzf ${{env.PREQ_PATH}}/googletest.tar.gz
+        mv ${{env.PREQ_PATH}}/googletest-release-1.11.0 ${{env.PREQ_PATH}}/googletest
+        mkdir -p ${{env.PREQ_PATH}}/googletest/build && cd ${{env.PREQ_PATH}}/googletest/build && cmake .. -DCMAKE_BUILD_TYPE=Release && make install
+        rm -rf ${{env.PREQ_PATH}}
+
     - name: Configure
       run: |
         cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
@@ -38,6 +47,7 @@ jobs:
         cpack -G ZIP
     
     - name: Release
+      working-directory: ${{github.workspace}}/build
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{env.VERSION_MAJOR}}.${{env.VERSION_MINOR}}.${{env.VERSION_PATCH}}
