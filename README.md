@@ -1,6 +1,6 @@
 # MyProject
 
-MyProject is a C++ library for for adding and subtracting numbers.
+MyProject is a C++ library for adding and subtracting numbers.
 
 ## Installation
 
