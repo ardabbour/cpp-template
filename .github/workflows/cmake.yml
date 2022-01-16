@@ -47,7 +47,6 @@ jobs:
         cpack -G ZIP
     
     - name: Release
-      working-directory: ${{github.workspace}}/build
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{env.VERSION_MAJOR}}.${{env.VERSION_MINOR}}.${{env.VERSION_PATCH}}
