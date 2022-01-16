@@ -17,7 +17,11 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Configure
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: |
+        cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        echo "CMAKE_PROJECT_VERSION_MAJOR CMakeCache.txt | cut -d "=" -f2" >> $VERSION_MAJOR
+        echo "CMAKE_PROJECT_VERSION_MINOR CMakeCache.txt | cut -d "=" -f2" >> $VERSION_MINOR
+        echo "CMAKE_PROJECT_VERSION_PATCH CMakeCache.txt | cut -d "=" -f2" >> $VERSION_PATCH
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
@@ -31,9 +35,11 @@ jobs:
       run: |
         cpack -G DEB
         cpack -G TGZ
+        cpack -G ZIP
     
     - name: Release
       uses: softprops/action-gh-release@v1
+      tag_name: ${{env.VERSION_MAJOR}}.${{env.VERSION_MINOR}}.${{env.VERSION_PATCH}}
       with:
         files: |
             *.zip
