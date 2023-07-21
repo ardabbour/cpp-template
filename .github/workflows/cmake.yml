@@ -8,7 +8,6 @@ on:
 
 env:
   BUILD_TYPE: Release
-  PREREQ_PATH: ${{github.workspace}}/prerequisites
 
 jobs:
   build:
@@ -21,31 +20,26 @@ jobs:
 
     - name: Prerequisites
       run: |
-        mkdir -p ${{env.PREREQ_PATH}}
-        wget --quiet https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz -O ${{env.PREREQ_PATH}}/googletest.tar.gz
-        tar -xvzf ${{env.PREREQ_PATH}}/googletest.tar.gz
-        mkdir -p ${{env.PREREQ_PATH}}/googletest-release-1.11.0/build
-        cd ${{env.PREREQ_PATH}}/googletest-release-1.11.0/build
-        cmake .. -DCMAKE_BUILD_TYPE=Release && make install
-        rm -rf ${{env.PREREQ_PATH}}
-        apt update && apt install libgtest-dev libgmock-dev googletest doxygen
+        apt update
+        apt install doxygen
       shell: bash
 
     - name: Configure
-      run: |
-        cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      working-directory: ${{github.workspace}}
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
+      working-directory: ${{github.workspace}}
       run: |
-        cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        cmake --build build --config ${{env.BUILD_TYPE}}
         echo "VERSION_MAJOR=$(grep CMAKE_PROJECT_VERSION_MAJOR CMakeCache.txt | cut -d "=" -f2)" >> $GITHUB_ENV
         echo "VERSION_MINOR=$(grep CMAKE_PROJECT_VERSION_MINOR CMakeCache.txt | cut -d "=" -f2)" >> $GITHUB_ENV
         echo "VERSION_PATCH=$(grep CMAKE_PROJECT_VERSION_PATCH CMakeCache.txt | cut -d "=" -f2)" >> $GITHUB_ENV
 
     - name: Test
-      working-directory: ${{github.workspace}}/build
-      run: ctest -C ${{env.BUILD_TYPE}}
-    
+      working-directory: ${{github.workspace}}
+      run: ctest --test-dir build -C ${{env.BUILD_TYPE}}
+
     - name: Package
       working-directory: ${{github.workspace}}/build
       run: |
@@ -56,7 +50,7 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{env.VERSION_MAJOR}}.${{env.VERSION_MINOR}}.${{env.VERSION_PATCH}}
+        tag_name: $VERSION_MAJOR.$VERSION_MINOR.$.VERSION_PATCH
         files: |
             ${{github.workspace}}/build/*.zip
             ${{github.workspace}}/build/*.tar.gz

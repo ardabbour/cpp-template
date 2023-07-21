@@ -32,9 +32,9 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
-# Mark warnings as errors
+# Turn on all complier warning flags (except for warnings as errors)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wdeprecated)
+  add_compile_options(-Wall -Wextra -Wpedantic -Wdeprecated)
 endif()
 # ##############################################################################
 
@@ -115,15 +115,7 @@ endif()
 # ##############################################################################
 option(BUILD_TESTING "Builds tests with Google Test" ON)
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-  include(CTest)
-  include(GoogleTest)
-  find_package(GTest)
-  if(GTEST_FOUND)
-    enable_testing()
-    add_subdirectory(tests)
-  else()
-    message("Failed to build the tests because Google Test was not found.")
-  endif()
+  add_subdirectory(tests)
 endif()
 # ##############################################################################
 

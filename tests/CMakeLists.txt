@@ -1,3 +1,13 @@
+include(CTest)
+
+# Get googletest using FetchContent
+include(FetchContent)
+FetchContent_Declare(
+  googletest URL https://github.com/google/googletest/archive/v1.13.0.tar.gz)
+FetchContent_MakeAvailable(googletest)
+include(GoogleTest)
+enable_testing()
+
 # Set the test source files
 set(TEST_SRC_FILES test_add.cc test_subtract.cc)
 
