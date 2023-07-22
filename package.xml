@@ -4,13 +4,13 @@
 
     <version>1.0.0</version>
 
-    <description>My Project</description>
+    <description>MyProject is a C++ library for adding and subtracting numbers.</description>
 
     <maintainer email="ardabbour@gmail.com">Abdul Rahman Dabbour</maintainer>
 
     <license>MIT</license>
 
-    <url type="repository">https://github.com/ardabbour/cpp_template</url>
+    <url type="repository">https://github.com/ardabbour/cpp-template</url>
 
     <author email="ardabbour@gmail.com">Abdul Rahman Dabbour</author>
 

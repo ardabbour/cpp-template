@@ -1,6 +1,6 @@
 # Define minimum CMake version
 # ##############################################################################
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 # ##############################################################################
 
 # Define project properties
@@ -8,8 +8,8 @@ cmake_minimum_required(VERSION 3.10)
 project(
   MyProject
   VERSION 1.0.0
-  DESCRIPTION "My Project!"
-  HOMEPAGE_URL "https://github.com/ardabbour/cpp_template"
+  DESCRIPTION "MyProject is a C++ library for adding and subtracting numbers."
+  HOMEPAGE_URL "https://github.com/ardabbour/cpp-template"
   LANGUAGES CXX)
 # ##############################################################################
 
@@ -32,9 +32,9 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
-# Mark warnings as errors
+# Turn on all complier warning flags (except for warnings as errors)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wdeprecated)
+  add_compile_options(-Wall -Wextra -Wpedantic -Wdeprecated)
 endif()
 # ##############################################################################
 
@@ -103,8 +103,10 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_DOCUMENTATION)
     set(DOXYGEN_SOURCE_BROWSER YES)
     set(DOXYGEN_GENERATE_TREEVIEW YES)
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-    doxygen_add_docs(doxygen ${CMAKE_CURRENT_SOURCE_DIR} ALL
-                     COMMENT "Generate HTML and man page documentation")
+    doxygen_add_docs(
+      doxygen ${CMAKE_CURRENT_SOURCE_DIR}/src
+      ${CMAKE_CURRENT_SOURCE_DIR}/include ALL
+      COMMENT "Generate HTML and man page documentation")
   else()
     message("Failed to build the documentation because Doxygen was not found.")
   endif()
@@ -115,13 +117,9 @@ endif()
 # ##############################################################################
 option(BUILD_TESTING "Builds tests with Google Test" ON)
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-  include(CTest)
-  find_package(GTest)
-  if(GTEST_FOUND)
-    add_subdirectory(tests)
-  else()
-    message("Failed to build the tests because Google Test was not found.")
-  endif()
+  set(INSTALL_GMOCK OFF)
+  set(INSTALL_GTEST OFF)
+  add_subdirectory(tests)
 endif()
 # ##############################################################################
 
@@ -176,4 +174,14 @@ if(NOT TARGET uninstall)
     COMMAND ${CMAKE_COMMAND} -P
             ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 endif()
+# ##############################################################################
+
+# Use CPack to create a package
+# ##############################################################################
+set(CPACK_PACKAGE_VENDOR "MyCompany")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY
+    "MyProject is a C++ library for adding and subtracting numbers.")
+set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
+set(CPACK_PACKAGE_CONTACT "ardabbour@gmail.com")
+include(CPack)
 # ##############################################################################

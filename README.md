@@ -1,16 +1,17 @@
 # MyProject
 
-MyProject is a C++ library for for adding and subtracting numbers.
+MyProject is a C++ library for adding and subtracting numbers.
 
 ## Installation
 
 Use the classic cmake method.
 
 ```bash
-mkdir build
-cd build
-cmake ..
-make install
+mkdir -p build
+cmake -B build
+cmake --build build
+cmake --install build
+ctest --test-dir build
 ```
 
 ## Usage
