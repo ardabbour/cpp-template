@@ -103,8 +103,10 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_DOCUMENTATION)
     set(DOXYGEN_SOURCE_BROWSER YES)
     set(DOXYGEN_GENERATE_TREEVIEW YES)
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-    doxygen_add_docs(doxygen ${CMAKE_CURRENT_SOURCE_DIR} ALL
-                     COMMENT "Generate HTML and man page documentation")
+    doxygen_add_docs(
+      doxygen ${CMAKE_CURRENT_SOURCE_DIR}/src
+      ${CMAKE_CURRENT_SOURCE_DIR}/include ALL
+      COMMENT "Generate HTML and man page documentation")
   else()
     message("Failed to build the documentation because Doxygen was not found.")
   endif()
@@ -115,6 +117,8 @@ endif()
 # ##############################################################################
 option(BUILD_TESTING "Builds tests with Google Test" ON)
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+  set(INSTALL_GMOCK OFF)
+  set(INSTALL_GTEST OFF)
   add_subdirectory(tests)
 endif()
 # ##############################################################################
@@ -129,6 +133,7 @@ install(
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   INCLUDES
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 # ##############################################################################
 
 # Create and install cmake helpers
