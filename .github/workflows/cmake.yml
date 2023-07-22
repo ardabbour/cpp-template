@@ -20,8 +20,8 @@ jobs:
 
     - name: Prerequisites
       run: |
-        apt update
-        apt install doxygen
+        sudo apt update
+        sudo apt install doxygen
       shell: bash
 
     - name: Configure
@@ -46,11 +46,11 @@ jobs:
         cpack -G DEB
         cpack -G TGZ
         cpack -G ZIP
-    
+
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: $VERSION_MAJOR.$VERSION_MINOR.$.VERSION_PATCH
+        tag_name: $VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH
         files: |
             ${{github.workspace}}/build/*.zip
             ${{github.workspace}}/build/*.tar.gz
