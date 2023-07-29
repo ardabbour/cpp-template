@@ -3,7 +3,8 @@ include(CTest)
 # Get googletest using FetchContent
 include(FetchContent)
 FetchContent_Declare(
-  googletest URL https://github.com/google/googletest/archive/v1.13.0.tar.gz)
+  googletest URL https://github.com/google/googletest/archive/v1.13.0.tar.gz
+                 DOWNLOAD_EXTRACT_TIMESTAMP ON)
 FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 enable_testing()
